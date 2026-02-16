@@ -1,0 +1,75 @@
+- name: Ensure Argo CD namespace exists
+  kubernetes.core.k8s:
+    kubeconfig: "{{ argocd_kubeconfig }}"
+    api_version: v1
+    kind: Namespace
+    name: "{{ argocd_namespace }}"
+    state: present
+  delegate_to: localhost
+  run_once: true
+
+- name: Download Argo CD install manifest to control host
+  ansible.builtin.get_url:
+    url: "{{ argocd_manifest_url }}"
+    dest: "{{ argocd_install_tmp }}"
+    mode: "0644"
+  delegate_to: localhost
+  run_once: true
+
+- name: Apply Argo CD install manifest
+  kubernetes.core.k8s:
+    kubeconfig: "{{ argocd_kubeconfig }}"
+    state: present
+    namespace: "{{ argocd_namespace }}"
+    src: "{{ argocd_install_tmp }}"
+    apply: yes
+    wait: yes
+  delegate_to: localhost
+  run_once: true
+
+- name: Optionally set argocd-server Service type to NodePort
+  when: argocd_server_service_type == 'NodePort'
+  kubernetes.core.k8s:
+    kubeconfig: "{{ argocd_kubeconfig }}"
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: argocd-server
+        namespace: "{{ argocd_namespace }}"
+      spec:
+        type: NodePort
+        selector:
+          app.kubernetes.io/name: argocd-server
+          app.kubernetes.io/part-of: argocd
+        ports:
+          - name: https
+            port: 443
+            targetPort: 8080
+            nodePort: "{{ (argocd_server_node_port | int) if argocd_server_node_port | int > 0 else omit }}"
+  delegate_to: localhost
+  run_once: true
+
+- name: Optionally set argocd-server Service type to LoadBalancer
+  when: argocd_server_service_type == 'LoadBalancer'
+  kubernetes.core.k8s:
+    kubeconfig: "{{ argocd_kubeconfig }}"
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: argocd-server
+        namespace: "{{ argocd_namespace }}"
+      spec:
+        type: LoadBalancer
+        selector:
+          app.kubernetes.io/name: argocd-server
+          app.kubernetes.io/part-of: argocd
+        ports:
+          - name: https
+            port: 443
+            targetPort: 8080
+  delegate_to: localhost
+  run_once: true

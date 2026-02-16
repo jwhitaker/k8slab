@@ -25,6 +25,18 @@
   tags: kubeconfig
   roles: [download-kubeconfig]
  
+# Install Argo CD onto the Kubernetes cluster using kubeconfig on control host
+- name: Install Argo CD
+  hosts: localhost
+  connection: local
+  tags: argocd
+  roles: [argocd]
+    # Set service type here if you want NodePort or LoadBalancer
+    # argocd_server_service_type: "NodePort"
+    # argocd_server_node_port: 32080
+    # Ensure KUBECONFIG is available; otherwise set argocd_kubeconfig explicitly
+    # argocd_kubeconfig: "{{ lookup('env', 'KUBECONFIG') | default('~/.kube/config', true) }}"
+
 # - name: Install Traefik
 #   hosts: enterprise
 #   tags: traefik

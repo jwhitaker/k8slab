@@ -2,6 +2,7 @@
 collections:
   - name: community.general
   - name: ansible.posix
+  - name: kubernetes.core
   - name: https://github.com/k3s-io/k3s-ansible.git
     type: git
     version: 1.1.1
