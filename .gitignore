@@ -1,0 +1,9 @@
+.venv
+ansible/inventory.yaml.kubeconfig
+.kubeconfig
+
+.env
+1password-credentials.json
+inventory.yaml
+
+ddns-updater.conf

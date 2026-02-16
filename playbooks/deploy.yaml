@@ -1,0 +1,51 @@
+- name: Install Common Dependencies and Configure Systems
+  hosts: k3s_cluster
+  tags: system
+  # become: true
+  # remote_user: jason
+  roles:
+    - common
+    - site
+    # # - docker
+    # # # - k3s
+    # # # - download-kubeconfig
+    # # # - monitoring
+    # # - 1password
+    # - plex
+
+- name: Import kube cluster playbook
+  ansible.builtin.import_playbook: k3s.orchestration.site
+  vars:
+    k3s_version: "v1.21.4+k3s1"
+    user_kubectl: true
+
+- name: Download kubeconfig from remote server
+  become: true
+  hosts: server
+  tags: kubeconfig
+  roles: [download-kubeconfig]
+ 
+# - name: Install Traefik
+#   hosts: enterprise
+#   tags: traefik
+#   roles: [traefik]
+
+# - name: Install ddns-updater
+#   hosts: enterprise
+#   tags: ddns-updater
+#   roles: [ddns-updater]
+
+# - name: Install Plex
+#   hosts: enterprise
+#   tags: plex
+#   roles: [plex]
+
+# - name: Install Homepage
+#   hosts: enterprise
+#   tags: homepage
+#   roles: [homepage]
+
+# - name: Install Mealie
+#   hosts: enterprise
+#   tags: mealie
+#   roles: [mealie]

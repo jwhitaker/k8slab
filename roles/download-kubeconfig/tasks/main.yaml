@@ -1,0 +1,17 @@
+- name: Copy k3s.yaml to k3s-remote.yaml on remote server
+  ansible.builtin.copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: /etc/rancher/k3s/k3s-remote.yaml
+    remote_src: yes
+
+- name: Replace server IP in kubeconfig with remote server's IP
+  ansible.builtin.replace:
+    path: /etc/rancher/k3s/k3s-remote.yaml
+    regexp: 'server: https://.*:6443'
+    replace: "server: https://{{ ansible_host }}:6443"
+
+- name: Download kubeconfig from remote server
+  ansible.builtin.fetch:
+    src: /etc/rancher/k3s/k3s-remote.yaml
+    dest: "{{ kubeconfig_path }}"
+    flat: yes
