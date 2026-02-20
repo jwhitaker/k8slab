@@ -18,4 +18,5 @@
     # - git
     # - curl
     # - vim
+    - python3-kubernetes 
     - htop

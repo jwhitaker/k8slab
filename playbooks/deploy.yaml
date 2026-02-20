@@ -27,8 +27,8 @@
  
 # Install Argo CD onto the Kubernetes cluster using kubeconfig on control host
 - name: Install Argo CD
-  hosts: localhost
-  connection: local
+  hosts: server
+  # connection: local
   tags: argocd
   roles: [argocd]
     # Set service type here if you want NodePort or LoadBalancer

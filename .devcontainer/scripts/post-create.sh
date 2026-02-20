@@ -3,6 +3,11 @@
 # Install ansible
 pipx install ansible-core
 
+pip install kubernetes >= 24.2.0
+pip install PyYAML >= 3.11
+pip install jsonpatch
+
+
 sudo apt update
 sudo apt install -y iputils-ping apt-transport-https ca-certificates curl gnupg
 

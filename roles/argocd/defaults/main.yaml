@@ -3,7 +3,7 @@ argocd_manifest_url: "https://raw.githubusercontent.com/argoproj/argo-cd/stable/
 argocd_install_tmp: "/tmp/argocd-install.yaml"
 
 # Use KUBECONFIG if set; otherwise default to ~/.kube/config
-argocd_kubeconfig: "{{ kubeconfig_path }}"
+# argocd_kubeconfig: "{{ kubeconfig_path }}"
 
 # Keep ClusterIP by default; change to NodePort/LoadBalancer if desired
 argocd_server_service_type: "ClusterIP"
