@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/jwhitaker/k8slab.git
     targetRevision: HEAD
-    chart: applications/apps
+    # chart: applications/apps
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd

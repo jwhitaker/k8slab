@@ -52,7 +52,7 @@
 
 - name: Run the app.yaml
   kubernetes.core.k8s:
-    state: present
+    # state: present
     src: "{{ argocd_deploypath }}/app.yaml"    
 
 #     curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
