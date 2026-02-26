@@ -1,10 +1,70 @@
+- name: Ensure directories are created
+  ansible.builtin.file:
+    state: directory
+    path: "{{ argocd_deploypath }}"
+    mode: "0750"
+
 - name: Ensure Argo CD namespace exists
   kubernetes.core.k8s:
-    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
     api_version: v1
     kind: Namespace
     name: "{{ argocd_namespace }}"
     state: present
-  # become: true
+      
+- name: Download Argo CD install manifest to control host
+  ansible.builtin.get_url:
+    url: "{{ argocd_manifest_url }}"
+    dest: "{{ argocd_deploypath }}/install.yaml"
+    mode: "0644"
   # delegate_to: localhost
   # run_once: true
+
+- name: Apply Argo CD install manifest
+  kubernetes.core.k8s:
+    # kubeconfig: "{{ argocd_kubeconfig }}"
+    state: present
+    namespace: "{{ argocd_namespace }}"
+    src: "{{ argocd_deploypath }}/install.yaml"
+    # src: "{{ argocd_manifest_url }}"
+    force: true
+    server_side_apply: 
+      field_manager: ansible
+    apply: yes
+    wait: yes
+    # delegate_to: localhost
+    # run_once: true
+
+- name: ARGOCD INSTALL | Download command line tool
+  get_url:
+    url: "{{ argocd_cli_url }}"
+    dest: "{{ argocd_deploypath }}/argocd"
+    mode: 0755
+
+- name: Template compose files
+  ansible.builtin.template:
+    src: "{{ file }}"
+    dest: "{{ argocd_deploypath }}/{{ file }}"
+    mode: "0640"
+  loop:
+    - app.yaml
+  loop_control:
+    loop_var: file    
+
+- name: Run the app.yaml
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ argocd_deploypath }}/app.yaml"    
+
+#     curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+# sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
+# rm argocd-linux-amd64
+
+# - name: Install Apps
+
+# argocd app create apps \
+#     --dest-namespace argocd \
+#     --dest-server https://kubernetes.default.svc \
+#     --repo https://github.com/argoproj/argocd-example-apps.git \
+#     --path apps  
+# argocd app sync apps  
+# argocd app sync -l app.kubernetes.io/instance=apps

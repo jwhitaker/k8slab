@@ -1,2 +1,5 @@
+argocd_deploypath: "{{ deploy_path }}/argocd"
+
+
 
 argocd_kubeconfig: "{{ kubeconfig_path }}"
