@@ -16,10 +16,10 @@ applications:
   #   tool:
   #     helm:
   #       releaseName: helm-dependency
-  - name: helm-guestbook
-    tool:
-      helm:
-        releaseName: helm-guestbook
+  # - name: helm-guestbook
+  #   tool:
+  #     helm:
+  #       releaseName: helm-guestbook
   # - name: helm-hooks
   # - name: jsonnet-guestbook
   # - name: jsonnet-guestbook-tla
