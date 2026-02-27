@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/jwhitaker/k8slab.git
-    targetRevision: latest
+    targetRevision: HEAD
     path: applications/apps
   destination:
     server: https://kubernetes.default.svc
