@@ -13,7 +13,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/jwhitaker/k8slab
-    path: applications/traefik1
+    path: applications/traefik
     targetRevision: HEAD
   syncPolicy:
     syncOptions:
