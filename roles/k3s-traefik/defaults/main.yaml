@@ -1,0 +1,4 @@
+k3s_traefik_enabled: true
+k3s_traefik_values: {}
+k3s_traefik_wait_rollout: false
+k3s_traefik_rollout_timeout: "120s"

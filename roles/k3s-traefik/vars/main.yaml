@@ -1,0 +1,32 @@
+k3s_traefik_values:
+  log:
+    level: debug
+  api:
+    dashboard: true
+    insecure: false
+  # service:
+  #   type: LoadBalancer
+  ports:
+    web:
+      forwardedHeaders:
+        insecure: true
+  ingressRoute:
+    dashboard:
+      enabled: true
+      entryPoints:
+        - websecure
+      matchRule: Host(`traefik.{{ hostname }}`)
+  #     middlewares:
+  #       - name: traefik-dashboard-allowlist
+  # extraObjects:
+  #   - apiVersion: traefik.containo.us/v1alpha1
+  #     kind: Middleware
+  #     metadata:
+  #       name: traefik-dashboard-allowlist
+  #       namespace: kube-system
+  #     spec:
+  #       ipWhiteList:
+  #         sourceRange:
+  #           - 10.0.0.0/8
+  #           - 172.16.0.0/12
+  #           - 192.168.0.0/16

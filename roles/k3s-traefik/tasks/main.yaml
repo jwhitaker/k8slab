@@ -1,0 +1,17 @@
+- name: Ensure k3s manifests directory exists
+  ansible.builtin.file:
+    path: /var/lib/rancher/k3s/server/manifests
+    state: directory
+    mode: "0755"
+
+- name: Apply Traefik HelmChartConfig manifest
+  ansible.builtin.template:
+    src: traefik-helmchartconfig.yaml.j2
+    dest: /var/lib/rancher/k3s/server/manifests/traefik-config.yaml
+
+- name: Restart Traefik deployment
+  ansible.builtin.command: k3s kubectl -n kube-system rollout restart deployment/traefik
+  changed_when: true
+# - name: Wait for Traefik rollout
+#   ansible.builtin.command: k3s kubectl -n kube-system rollout status deployment/traefik --timeout={{ k3s_traefik_rollout_timeout }}
+#   changed_when: false
