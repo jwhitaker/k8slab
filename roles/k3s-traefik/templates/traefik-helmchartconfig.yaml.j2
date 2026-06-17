@@ -5,18 +5,4 @@ metadata:
   namespace: kube-system
 spec:
   valuesContent: |-
-    log:
-      level: debug
-    api:
-      dashboard: true
-      insecure: false
-#    ports:
-#      web:
-#        forwardedHeaders:
-#          insecure: true
-    ingressRoute:
-      dashboard:
-        enabled: true
-        entryPoints:
-          - websecure
-        matchRule: (Host(`traefik.{{ hostname }}`)
+{{ k3s_traefik_values | to_nice_yaml(indent=2) | indent(4, true) }}

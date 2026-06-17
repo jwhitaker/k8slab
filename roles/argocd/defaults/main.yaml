@@ -11,5 +11,6 @@ argocd_cli_url: "https://github.com/argoproj/argo-cd/releases/download/v3.3.2/ar
 # Keep ClusterIP by default; change to NodePort/LoadBalancer if desired
 # argocd_server_service_type: "ClusterIP"
 
+
 # # Optional: set NodePort if using NodePort service type (e.g., 32080)
 # argocd_server_node_port: 0

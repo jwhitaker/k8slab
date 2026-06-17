@@ -1,4 +1,21 @@
 k3s_traefik_enabled: true
-k3s_traefik_values: {}
-k3s_traefik_wait_rollout: false
+k3s_traefik_values:
+  ports:
+    traefik:
+      expose: true
+  api:
+    dashboard: true
+    insecure: true
+  logs:
+    level: DEBUG
+  providers:
+    kubernetesCRD:
+      allowCrossNamespace: true
+  ingressRoute:
+    dashboard:
+      enabled: true
+      entryPoints:
+        - web
+      matchRule: "Host(`traefik.{{ hostname }}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
+k3s_traefik_wait_rollout: true
 k3s_traefik_rollout_timeout: "120s"
