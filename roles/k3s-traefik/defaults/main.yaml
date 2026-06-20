@@ -6,16 +6,35 @@ k3s_traefik_values:
   api:
     dashboard: true
     insecure: true
-  logs:
+  log:
     level: DEBUG
   providers:
+    kubernetesIngress:
+      enabled: false
+    kubernetesGateway:
+      enabled: true  
     kubernetesCRD:
       allowCrossNamespace: true
   ingressRoute:
     dashboard:
       enabled: true
-      entryPoints:
-        - web
-      matchRule: "Host(`traefik.{{ hostname }}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
+      entryPoints: ["websecure"]
+  gateway:
+    listeners:
+      web:
+        port: 80
+        protocol: HTTP
+        namespacePolicy:
+          from: All
+      websecure:
+        port: 443
+        protocol: HTTPS
+        namespacePolicy:
+          from: All
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: "{{ cert_name }}"
+            group: ""
 k3s_traefik_wait_rollout: true
 k3s_traefik_rollout_timeout: "120s"

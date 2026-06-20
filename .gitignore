@@ -7,3 +7,5 @@ ansible/inventory.yaml.kubeconfig
 inventory.yaml
 
 ddns-updater.conf
+tls.crt
+tls.key

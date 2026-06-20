@@ -1,2 +1,1 @@
-# Intentionally left blank.
-# Keep role vars minimal so Traefik settings are overrideable via defaults/inventory.
+traefik_deploypath: "{{ deploy_path }}/traefik"
