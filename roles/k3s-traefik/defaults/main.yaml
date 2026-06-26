@@ -7,7 +7,9 @@ k3s_traefik_values:
     dashboard: true
     insecure: true
   log:
-    level: DEBUG
+    level: "DEBUG"
+    accessLog:
+      enabled: true
   providers:
     kubernetesIngress:
       enabled: false

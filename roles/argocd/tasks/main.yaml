@@ -40,13 +40,45 @@
     dest: "{{ argocd_deploypath }}/argocd"
     mode: 0755
 
+- name: Check for existing Argo CD TLS secret
+  ansible.builtin.command: k3s kubectl -n argocd get secret {{ cert_name }} -o name
+  register: existing_tls_secret
+  failed_when: false
+  changed_when: false
+
+# - name: Install Argo CD TLS certificates
+#   when: existing_tls_secret.stdout == ""
+#   block:
+#     - name: Upload TLS certificate file
+#       ansible.builtin.copy:
+#         src: "{{ tls_crt }}"
+#         dest: "{{ argocd_deploypath }}/tls.crt"
+#         mode: '0600'
+
+#     - name: Upload TLS key file
+#       ansible.builtin.copy:
+#         src: "{{ tls_key }}"
+#         dest: "{{ argocd_deploypath }}/tls.key"
+#         mode: '0600'
+
+#     - name: Create Kubernetes secret for Traefik TLS
+#       ansible.builtin.shell: >
+#         k3s kubectl create secret tls {{ cert_name }} \
+#           --cert={{ argocd_deploypath }}/tls.crt \
+#           --key={{ argocd_deploypath }}/tls.key \
+#           -n argocd \
+#           --dry-run=client -o yaml | k3s kubectl apply -f -
+#       register: tls_secret_apply
+#       changed_when: "'created' in tls_secret_apply.stdout or 'configured' in tls_secret_apply.stdout"
+
+
 - name: Template compose files
   ansible.builtin.template:
     src: "{{ file }}"
     dest: "{{ argocd_deploypath }}/{{ file }}"
     mode: "0640"
   loop:
-    - app.yaml
+    # - app.yaml
     - ingress.yaml
   loop_control:
     loop_var: file
@@ -76,3 +108,39 @@
 #     --path apps  
 # argocd app sync apps  
 # argocd app sync -l app.kubernetes.io/instance=apps
+
+
+
+
+
+
+# - name: Check for existing Argo CD TLS secret
+#   ansible.builtin.command: k3s kubectl -n argocd get secret {{ cert_name }} -o name
+#   register: existing_tls_secret
+#   failed_when: false
+#   changed_when: false
+
+# - name: Install Argo CD TLS certificates
+#   when: existing_tls_secret.stdout == ""
+#   block:
+#     - name: Upload TLS certificate file
+#       ansible.builtin.copy:
+#         src: "{{ tls_crt }}"
+#         dest: "{{ argocd_deploypath }}/tls.crt"
+#         mode: '0600'
+
+#     - name: Upload TLS key file
+#       ansible.builtin.copy:
+#         src: "{{ tls_key }}"
+#         dest: "{{ argocd_deploypath }}/tls.key"
+#         mode: '0600'
+
+#     - name: Create Kubernetes secret for Traefik TLS
+#       ansible.builtin.shell: >
+#         k3s kubectl create secret tls {{ cert_name }} \
+#           --cert={{ argocd_deploypath }}/tls.crt \
+#           --key={{ argocd_deploypath }}/tls.key \
+#           -n argocd \
+#           --dry-run=client -o yaml | k3s kubectl apply -f -
+#       register: tls_secret_apply
+#       changed_when: "'created' in tls_secret_apply.stdout or 'configured' in tls_secret_apply.stdout"

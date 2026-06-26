@@ -1,15 +1,60 @@
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: argocd-server
+#   namespace: argocd
+# spec:
+#   entryPoints:
+#     - websecure
+#   routes:
+#     - kind: Rule
+#       match: Host(`argocd.k8slab.thewhitakers.ca`)
+#       priority: 10
+#       services:
+#         - name: argocd-server
+#           port: 80
+#   tls:
+#     secretName: {{ cert_name }} 
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
   name: argocd-server
   namespace: argocd
 spec:
-  entryPoints:
-    - websecure
-  routes:
-    - kind: Rule
-      match: Host(`argocd.k8slab.thewhitakers.ca`)
-      priority: 10
-      services:
-        - name: argocd-server
-          port: 80
+  rules:
+    - host: argocd.k8slab.thewhitakers.ca
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  number: 80
+    
+
+# kind: Ingress
+# apiVersion: networking.k8s.io/v1
+# metadata:
+#   name: whoami
+
+# spec:
+#   rules:
+#     - http:
+#         paths:
+#           - path: /bar
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: whoami
+#                 port:
+#                   number: 5678
+#           - path: /foo
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: whoami
+#                 port:
+#                   number: 5678

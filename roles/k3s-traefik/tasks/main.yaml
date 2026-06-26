@@ -4,9 +4,11 @@
     path: "{{ traefik_deploypath }}"
     mode: "0750"
 
-
 - name: Install Traefik TLS certificates
   ansible.builtin.import_tasks: certs.yaml
 
 - name: Configure Traefik
   ansible.builtin.import_tasks: traefik.yaml
+
+- name: Configure Traefik dashboard
+  ansible.builtin.import_tasks: dashboard.yaml

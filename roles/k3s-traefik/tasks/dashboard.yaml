@@ -1,0 +1,25 @@
+
+- name: Copy traefik dashboard service manifest
+  ansible.builtin.template:
+    src: dashboard-service.yaml.j2
+    dest: "{{ traefik_deploypath }}/dashboard-service.yaml"
+  register: dashboard_service_manifest
+
+- name: Create traefik dashboard service
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ traefik_deploypath }}/dashboard-service.yaml"
+  when: dashboard_service_manifest is changed
+
+- name: Copy traefik dashboard ingress manifest
+  ansible.builtin.template:
+    src: dashboard-ingress.yaml.j2
+    dest: "{{ traefik_deploypath }}/dashboard-ingress.yaml"
+  register: dashboard_ingress_manifest
+
+- name: Create traefik dashboard ingress
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ traefik_deploypath }}/dashboard-ingress.yaml"
+  when: dashboard_ingress_manifest is changed
+
